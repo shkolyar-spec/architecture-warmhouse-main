@@ -1,0 +1,27 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(masterData, "Master Data Service (НСИ)","Java") {
+
+    Component(user_registry, "Регистр пользователей", "Spring Boot Component", "Хранение данных пользователей")
+    Component(device_registry, "Регистр устройств", "Spring Boot Component", "Учет устройств и их принадлежности пользователям")
+    Component(reference_dictionary, "Справочники", "Spring Boot Component", "Справочники и классификаторы (типы устройств, статусы и т.д.)")
+
+    Component(api_layer, "API Layer", "REST", "Предоставляет API для других сервисов")
+    Component(logging, "Логирование", "Spring AOP / Logger", "Пишет/читает данные", "JDBC")
+}
+
+
+Component_Ext(ms_api_gateway, "API Gateway", "Service")
+ComponentDb_Ext(ms_database, "База данных", "DB")
+ComponentDb_Ext(redis, "Redis", "In-memory key-value store")
+
+Rel(ms_api_gateway, api_layer, "Вызов", "REST")
+Rel(api_layer, device_registry, "Использует")
+Rel(api_layer, reference_dictionary, "Использует")
+
+Rel(user_registry, ms_database, "Пишет/читает данные", "JDBC")
+Rel(device_registry, ms_database, "Пишет/читает данные", "JDBC")
+Rel(reference_dictionary, redis, "Читает/обновляет кеш справочников")
+Rel(logging, ms_database, "Сохраняет историю изменений")
+@enduml

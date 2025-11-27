@@ -1,0 +1,18 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+Container_Boundary(user_container, "User Service", "Java", "Управление профилями, подписками и правами"){
+    Component(user_api, "User API", "REST API", "CRUD профиль, настройки, подписки")
+    Component(private_account, "Личный кабинет", "Java", "Создает\изменяет данные в ЛК")
+}
+
+Component_Ext(ms_api_gateway, "API Gateway", "Service")
+ComponentDb_Ext(ms_database, "База данных", "DB")
+
+
+Rel(user_api, private_account, "Читает/пишет")
+Rel(ms_api_gateway, user_api, "Вызывает", "REST")
+Rel(private_account, ms_database, "Читает/пишет")
+
+@enduml

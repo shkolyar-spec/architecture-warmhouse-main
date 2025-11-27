@@ -1,0 +1,140 @@
+@startuml
+!pragma useBetaStyle true
+
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 13
+skinparam shadowing false
+
+
+
+title ER-диаграмма системы "Тёплый дом"
+
+entity "Пользователь" as user {
+  *user_id : UUID
+  --
+  name : string
+  code : string
+  email : string
+  password : string
+  role : string
+}
+
+entity "Роль" as role {
+  *role_id : UUID
+  --
+  name : string
+  code : string
+  rights : string
+}
+
+entity "Права" as rights {
+  *right_id : UUID
+  --
+  name : string
+  code : string
+  activity : string
+}
+
+entity "Дом" as house {
+  *house_id : UUID
+  --
+  address : string
+  name : string
+  code : string
+}
+
+entity "Устройство" as device {
+  *device_id : UUID
+  --
+  type_id : UUID
+  serial_number : string
+  status : string
+  vendor : UUID
+}
+
+entity "Вендор" as vendor {
+  *vendor_id : UUID
+  --
+  name : string
+  code : string
+  type_vendor_id : UUID
+}
+
+entity "Тип устройства" as device_type {
+  *type_device_id : UUID
+  --
+  name : string
+  description : string
+}
+
+entity "Модуль" as module {
+  *module_id : UUID
+  --
+  name : string
+  description : string
+  protocol : string
+}
+
+entity "Телеметрия" as telemetry {
+  *telemetry_id : UUID
+  --
+  device_id : UUID
+  timestamp : datetime
+  temperature : float
+  humidity : float
+  power_state : boolean
+}
+
+entity "Заказ" as order {
+  *order_id : UUID
+  --
+  user_id : UUID
+  order_pos_id : UUID
+  payment_id : UUID
+  status : string
+  created_at : datetime
+}
+
+entity "Позиция заказа" as order_position {
+  *order_pos_id : UUID
+  --
+  user_id : UUID
+  product_id : UUID
+  status : string
+  created_at : datetime
+}
+
+entity "Оплата" as payment {
+  *payment_id : UUID
+  --
+  order_id : UUID
+  amount : decimal
+  status : string
+  payment_date : datetime
+}
+
+entity "Комплект" as set {
+  *set_id : UUID
+  --
+  module_id : UUID
+  device_id : UUID
+  name : string
+}
+
+' --- Связи ---
+user ||--o{ house : владеет >
+user |o--o{ role : владеет >
+role }o--o{ rights : содержит >
+house ||--o{ device : содержит >
+device }o--|| device_type : принадлежит >
+device ||--o{ telemetry : генерирует >
+device }o--|| vendor : принадлежит >
+device }|--o| set : принадлежит >
+module ||--o| set : принадлежит >
+user ||--o{ order : оформляет >
+order ||--|{ payment : оплачен >
+order ||--|{ order_position : принадлежит >
+order_position }o--o{ device : содержит >
+order_position }o--o{ set : содержит >
+order_position }o--o{ module : содержит >
+@enduml

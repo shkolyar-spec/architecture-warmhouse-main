@@ -1,0 +1,18 @@
+@startuml
+title "Теплый дом" Context Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "Пользователь", "Пользователь системы 'Теплый дом'")
+Component(sensors, "Датчики", "Датчики умного дома")
+System(WarmHome, "Теплый дом", "Система управления датчиками умного дома")
+
+System_Ext(bank, "Система банка", "Банковская система для обработки платежей")
+
+Rel(user, WarmHome, "Управляет датчиками, данными пользователя")
+BiRel(sensors,WarmHome,"Обмениваются данными")
+BiRel(WarmHome,bank,"Обрабатывает платежи, обмениваются данными")
+
+@enduml

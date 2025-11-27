@@ -1,0 +1,133 @@
+openapi: '3.0.3'
+info:
+  title: Device Management API
+  version: 1.0.0
+  description: Регистрация устройства и базовые операции управления
+servers:
+  - url: https://api.warm-house.ru/devices
+security:
+  - bearerAuth: [ ]
+paths:
+  /devices:
+    post:
+      summary: Зарегистрировать устройство
+      operationId: registerDevice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DeviceRegister' }
+            examples:
+              Registration:
+                value:
+                  serialNumber: "SN-001-ABC"
+                  type: "TEMP_SENSOR"
+                  houseId: "2d4f0c51-4d1d-4d19-9f6c-2d0a5e0c0001"
+      responses:
+        '201':
+          description: Устройство зарегистрировано
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Device' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  /devices/{deviceId}:
+    get:
+      summary: Получить устройство по ID
+      operationId: getDevice
+      parameters:
+        - in: path
+          name: deviceId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Устройство
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Device' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /devices/{deviceId}/commands:
+    post:
+      summary: Отправить команду устройству
+      operationId: sendCommand
+      parameters:
+        - in: path
+          name: deviceId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CommandRequest' }
+            examples:
+              turn_on:
+                value: { command: "SET_POWER", payload: { state: true } }
+              set_temp:
+                value: { command: "SET_TEMPERATURE", payload: { value: 22.5 } }
+      responses:
+        '202':
+          description: Команда принята в обработку
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CommandAccepted' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: Неверные данные
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Не найдено
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    DeviceRegister:
+      type: object
+      required: [ serialNumber, type, houseId ]
+      properties:
+        serialNumber: { type: string }
+        type_device_id: { type: string, format: uuid }
+        houseId: { type: string, format: uuid }
+    Device:
+      type: object
+      required: [ deviceId, serialNumber, type, status, houseId ]
+      properties:
+        deviceId: { type: string, format: uuid }
+        serialNumber: { type: string }
+        type: { type: string }
+        status: { type: string, enum: [ACTIVE, INACTIVE, OFFLINE] }
+        houseId: { type: string, format: uuid }
+    CommandRequest:
+      type: object
+      required: [ command, payload ]
+      properties:
+        command: { type: string, enum: [SET_POWER, SET_TEMPERATURE, OPEN, CLOSE] }
+        payload:
+          type: object
+          additionalProperties: true
+    CommandAccepted:
+      type: object
+      required: [ commandId, status ]
+      properties:
+        commandId: { type: string, format: uuid }
+        status: { type: string, enum: [QUEUED, SENT] }
+    Error:
+      type: object
+      required: [ code, message ]
+      properties:
+        code: { type: string }
+        message: { type: string }
+
+

@@ -1,0 +1,151 @@
+openapi: '3.0.3'
+info:
+  title: Device Sales API
+  version: 1.0.0
+  description: Создание заказа на комплект/устройство и инициация оплата
+servers:
+  - url: https://api.warm-house.ru/sales
+security:
+  - bearerAuth: [ ]
+paths:
+  /orders:
+    post:
+      summary: Создать заказ
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OrderCreate' }
+            examples:
+              ok:
+                value:
+                  header:
+                    orderId: 8f3c2c99-7e50-4f0b-9b7a-4a2c963e7fc2
+                    status: CREATED
+                    totalAmount: 150.75
+                    createdAt: "2023-09-01T10:00:00Z"
+                  items:
+                    - sku: "SENSOR-TEMP-V1"
+                      qty: 2
+                    - sku: "RELAY-LIGHT-V1"
+                      qty: 1
+      responses:
+        '201':
+          description: Заказ создан
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /orders/{orderId}:
+    get:
+      summary: Получить заказ по ID
+      operationId: getOrder
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Данные заказа
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /orders/{orderId}/pay:
+    post:
+      summary: Инициировать оплату во внешней платёжной системе
+      operationId: initPayment
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '202':
+          description: Платёж инициирован
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentInit' }
+              examples:
+                ok:
+                  value:
+                    paymentId: "pay_12345"
+                    redirectUrl: "https://pay.example.com/session/abc"
+        '404': { $ref: '#/components/responses/NotFound' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: Неверные данные
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Не авторизован
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Не найдено
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    OrderCreate:
+      type: object
+      required: [ header, items ]
+      properties:
+        header:
+          type: object
+          required: [ orderId, status, totalAmount ]
+          properties:
+            orderId: { type: string, format: uuid }
+            status: { type: string, enum: [CREATED, PENDING_PAYMENT, PAID, CANCELLED] }
+            totalAmount: { type: number, format: float }
+            createdAt: { type: string, format: date-time }
+        items:
+          type: array
+          items:
+            type: object
+            required: [ sku, qty ]
+            properties:
+              sku: { type: string }
+              qty: { type: integer, minimum: 1 }
+    Order:
+      type: object
+      required: [ orderId, status, totalAmount ]
+      properties:
+        orderId: { type: string, format: uuid }
+        status: { type: string, enum: [CREATED, PENDING_PAYMENT, PAID, CANCELLED] }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              sku: { type: string }
+              qty: { type: integer }
+        totalAmount: { type: number, format: float }
+        createdAt: { type: string, format: date-time }
+    PaymentInit:
+      type: object
+      required: [ paymentId, redirectUrl ]
+      properties:
+        paymentId: { type: string }
+        redirectUrl: { type: string, format: uri }
+    Error:
+      type: object
+      required: [ code, message ]
+      properties:
+        code: { type: string }
+        message: { type: string }
+

@@ -1,0 +1,60 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_TOP_DOWN()
+title Контейнерная диаграмма Теплого дома
+
+'Участники внешние
+'-----------------
+Person(user, "Пользователь")
+System_Ext(payment_system, "Сервис оплаты")
+System_Ext(vendor_systems, "Внешние вендоры", "IoT устройства")
+Container_Ext(modules, "Датчики")
+
+'Границы системы
+'-----------------
+System_Boundary(system, "Система (микросервисы)") {
+    Container(web_app, "Веб-приложение", "React / Vue.js", "Интерфейс пользователя, обращается к API Gateway")
+    Container(api_gateway, "API Gateway", "AWS API Gateway", "Контроль доступа к сервисам")
+    Container(auth_service, "Сервис авторизации", "Keycloak / Spring Security", "Аутентификация и авторизация пользователей")
+    Container(selling, "Продажа датчиков", "Java", "Маркетинг активности")
+    Container(masterData, "НСИ", "Java", "Хранение справочных данных датчиков, данных пользователей")
+    Container(manage_modules, "Управление датчиками", "Java", "Управление датчиками")
+    ContainerDb(database, "База данных", "PostrgeSQL", "Хранение данных")
+    ContainerDb(redis, "Redis", "In-memory key-value store", "Хранение активных сессий, кэшей, refresh токенов")
+    Container(integration_gateway, "Integration Gateway", "Java", "Интеграция с внешними поставщиками данных и системами")
+    Container(manage_users, "Управление пользователями", "Java", "Управление данными пользователей")
+}
+
+
+'Связи внешние
+'-----------------
+Rel(user, web_app, "Использует", "HTTPS")
+BiRel(integration_gateway, vendor_systems, "Интеграция с внешними API", "REST")
+BiRel(selling, payment_system, "Отправляет данные оплаты, принимает ответ", "REST")
+Rel(modules, manage_modules, "Обращается через", "REST")
+
+'Связи внутри системы с API Gateway
+'----------------
+Rel(web_app, api_gateway, "Использует", "REST")
+Rel(api_gateway, masterData, "Обращается через", "REST")
+Rel(api_gateway, manage_modules, "Обращается через", "REST")
+Rel(api_gateway, selling, "Обращается через", "REST")
+Rel(api_gateway, manage_users, "Обращается через", "REST")
+Rel(api_gateway, auth_service, "Обращается через", "REST")
+BiRel(integration_gateway, api_gateway, "Передает данные", "REST")
+
+'Связи внутри системы сохранение в БД
+'----------------
+Rel(manage_modules, database, "Сохраняет данные в", "JDBC")
+Rel(selling, database, "Сохраняет данные в", "JDBC")
+Rel(masterData, database, "Сохраняет данные в", "JDBC")
+Rel(auth_service, redis, "Хранит refresh токены и сессии", "Redis client")
+
+'Связи внутри системы обращение к НСИ
+'----------------
+BiRel(manage_modules, masterData, "Обращается через", "REST")
+BiRel(selling, masterData, "Обращается через", "REST")
+BiRel(manage_users, masterData, "Обращается через", "REST")
+
+@enduml

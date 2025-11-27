@@ -1,0 +1,23 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+
+Container_Boundary(billing_container, "Billing / Sales", "Java", "Заказы комплектов устройств, оплата"){
+
+    Component(order_api, "Order API", "REST API", "Принимает заказ на комплект/устройство")
+    Component(order_mgmt, "Обработчик заказов", "Java", "Заказы, статусы")
+    Component(bill_mgmt, "Обработка счетов", "Java", "Интеграция с платёжной системой")
+}
+
+Component_Ext(ms_api_gateway, "API Gateway", "Service")
+Component_Ext(payment_system, "Сервис оплаты", "System")
+ComponentDb_Ext(ms_database, "База данных", "DB")
+
+Rel(ms_api_gateway, order_api, "Создаёт/обновляет")
+Rel(order_api, order_mgmt, "Создаёт/обновляет")
+Rel(order_api, bill_mgmt, "Инициирует платёж")
+Rel(order_mgmt, ms_database, "Читает\пишет", "JDBC")
+Rel(bill_mgmt, ms_database, "Читает\пишет", "JDBC")
+BiRel(bill_mgmt, payment_system, "Обмениваются информацией", "REST")
+@enduml

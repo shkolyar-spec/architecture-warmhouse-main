@@ -1,0 +1,26 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+
+Container_Boundary(module_mgmt_container, "Device Management", "Java", "Регистрация устройств, привязка к дому/пользователю, управление конфигами"){
+    Component(dev_api, "Device API", "REST API", "Регистрация устройства, получение команд, CRUD конфигураций")
+    Component(device_mgmt, "Управление устройствами", "Java", "Регистрация\изменение\удаление устройств")
+    Component(device_actions, "Отправка команд устройствам", "Java", "Отправка команд устройствам, управление состоянием")
+    Component(tele_mgmt, "Управление телеметрией", "Java", "Получение\внесение\изменение показаний датчиков")
+}
+
+Component_Ext(modules, "Датчики", "Component")
+Component_Ext(ms_api_gateway, "API Gateway", "Service")
+ComponentDb_Ext(ms_database, "База данных", "DB")
+
+Rel(ms_api_gateway, dev_api, "Вызов", "REST")
+Rel(dev_api, tele_mgmt, "Использует")
+Rel(dev_api, device_mgmt, "Использует")
+Rel(dev_api, device_actions, "Использует")
+Rel(device_actions, modules, "Вызывает", "REST")
+
+Rel(modules, tele_mgmt, "Вызывает", "REST")
+Rel(device_mgmt, ms_database, "Читает\пишет", "JDBC")
+Rel(tele_mgmt, ms_database, "Читает\пишет", "JDBC")
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+
+Container_Boundary(webapp, "Web Application") {
+
+    Component(ui_layer, "UI слой", "React", "Визуальное отображение интерфейса пользователя")
+    Component(auth_module, "Модуль авторизации", "React Hooks / Context", "Аутентификация, регистрация, хранение и обновление токенов")
+    Component(device_module, "Управление устройствами", "React Feature Module", "Просмотр, добавление и настройка устройств")
+    Component(billing_sales_module, "Заказы", "React Feature Module", "Оплата подписок, история платежей")
+    Component(api_client, "API Client", "Axios / Fetch wrapper", "Единая прослойка для вызовов REST API через API Gateway")
+    Component(state_store, "Хранилище состояний", "Redux / Zustand", "Централизованное хранилище состояния приложения")
+}
+
+' Внешние связи
+Container_Ext(api_gateway, "API Gateway", "REST", "Маршрутизация запросов к микросервисам")
+Container_Ext(ms_auth_service, "Сервис авторизации", "REST", "Выдача токенов и валидация сессий")
+Person(user, "Пользователь")
+
+' Связи
+Rel(user, ui_layer, "Взаимодействует через браузер", "HTTP / HTTPS")
+
+Rel(ui_layer, state_store, "Читает и обновляет состояние")
+Rel(ui_layer, auth_module, "Использует для входа и выхода из системы")
+Rel(ui_layer, device_module, "Переходит к управлению устройствами")
+Rel(ui_layer, billing_sales_module, "Заказы, оплата")
+
+Rel(auth_module, api_client, "Отправляет запросы на авторизацию", "REST")
+Rel(device_module, api_client, "Запрашивает данные об устройствах", "REST")
+Rel(billing_sales_module, api_client, "Отправляет запросы об оплатах", "REST")
+Rel(api_client, api_gateway, "Отправляет REST-запросы", "HTTPS")
+
+Rel(auth_module, ms_auth_service, "Обновляет токены при входе", "REST")
+Rel(state_store, api_client, "Сохраняет полученные данные", "Internal API")
+
+@enduml

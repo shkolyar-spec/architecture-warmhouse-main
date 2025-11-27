@@ -1,0 +1,64 @@
+@startuml
+
+title Auth Service — Token Service Diagram
+
+class AuthController {
+  +login(request: LoginRequest): AuthResponse
+  +refreshToken(token: String): AuthResponse
+  +logout(token: String)
+}
+
+class TokenManager {
+  +generateAccessToken(user: User): String
+  +generateRefreshToken(user: User): String
+  +validateToken(token: String): boolean
+  +invalidateRefreshToken(token: String)
+  -createToken(payload: Map<String, Object>, expiry: Duration): String
+}
+
+class TokenProvider {
+  +encode(payload: Map<String, Object>, secret: String): String
+  +decode(token: String, secret: String): Map<String, Object>
+  +isExpired(token: String): boolean
+}
+
+class RedisSessionRepository {
+  +saveRefreshToken(userId: UUID, token: String, expiry: Instant)
+  +isTokenActive(token: String): boolean
+  +revokeToken(token: String)
+}
+
+class UserServiceClient {
+  +getUserByCredentials(email: String, password: String): User
+  +getUserById(userId: UUID): User
+}
+
+class User {
+  -id: UUID
+  -email: String
+  -password: String
+  -role: String
+}
+
+class AuthResponse {
+  +accessToken: String
+  +refreshToken: String
+  +expiresIn: long
+}
+
+class LoginRequest {
+  +email: String
+  +password: String
+}
+
+AuthController --> TokenManager : использует
+AuthController --> AuthResponse : использует
+AuthController --> LoginRequest : использует
+TokenManager --> TokenProvider : кодирует/декодирует токены
+TokenManager --> RedisSessionRepository : сохраняет/удаляет токены
+TokenManager --> UserServiceClient : проверяет пользователя
+UserServiceClient --> User : запрашивает
+TokenManager --> User : создает токен на основе пользователя
+RedisSessionRepository --> "Redis" : взаимодействует с кэшем
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+Container_Boundary(integ_container, "Integration Gateway", "Node/Go", "Мосты/адаптеры для внешних сервисов и партнёров (производители устройств, шлюзы)"){
+    Component(rest_adapters, "REST Adapters", "HTTP", "Внешние REST интеграции (поставщики, сервисы)")
+    Component(mqtt_bridge, "MQTT Bridge", "MQTT Broker / Bridge", "Связь с устройствами/партнёрами по MQTT")
+    Component(protocol_translator, "Protocol Translator", "Component", "Преобразование форматов / протоколов")
+    Component(security_proxy, "Security Proxy", "Component", "Шифрование, подписи, аутентификация партнёров")
+}
+
+System_Ext(vendor_systems, "Внешние вендоры", "IoT устройства")
+Component_Ext(ms_api_gateway, "API Gateway", "Service")
+
+Rel(rest_adapters, protocol_translator, "Преобразует")
+Rel(mqtt_bridge, protocol_translator, "Преобразует")
+Rel(security_proxy, rest_adapters, "Фильтрует/проверяет подписи")
+Rel(security_proxy, mqtt_bridge, "Фильтрует/проверяет подписи")
+Rel(protocol_translator, ms_api_gateway, "Вызывает", "REST")
+Rel(vendor_systems, security_proxy, "Вызывает", "REST")
+@enduml

@@ -1,0 +1,96 @@
+openapi: '3.0.3'
+info:
+  title: Auth Service API
+  version: '1.0.0'
+  description: Базовые операции аутентификации и управления токенами
+servers:
+  - url: https://api.warm-house.ru/auth
+
+security:
+  - bearerAuth: []
+paths:
+  /login:
+    post:
+      summary: Вход пользователя и выдача токенов
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+            examples:
+              Success:
+                value: { email: "user@example.com", password: "QWERTY123!" }
+      responses:
+        '200':
+          description: Успех
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+              examples:
+                Success:
+                  value:
+                    accessToken: "eyJhbGciOiJIUzI1NiIs..."
+                    refreshToken: "a1b2c3-refresh"
+                    expiresIn: 3600
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+
+  /refresh:
+    post:
+      summary: Обновление access-токена по refresh-токену
+      operationId: refresh
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RefreshRequest' }
+            examples:
+              ok: { value: { refreshToken: "a1b2c3-refresh" } }
+      responses:
+        '200':
+          description: Новый access-токен
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    Unauthorized:
+      description: Не авторизован
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            unauthorized: { value: { code: "UNAUTHORIZED", message: "Неверные логин/пароль или токен" } }
+  schemas:
+    LoginRequest:
+      type: object
+      required: [ email, password ]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
+    RefreshRequest:
+      type: object
+      required: [ refreshToken ]
+      properties:
+        refreshToken: { type: string }
+    AuthResponse:
+      type: object
+      required: [ accessToken, refreshToken, expiresIn ]
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        expiresIn: { type: integer, description: "секунды" }
+    Error:
+      type: object
+      required: [ code, message ]
+      properties:
+        code: { type: string }
+        message: { type: string }
