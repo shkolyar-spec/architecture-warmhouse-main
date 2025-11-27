@@ -1,7 +1,3 @@
-# Project_template
-
-Это шаблон для решения проектной работы. Структура этого файла повторяет структуру заданий. Заполняйте его по мере работы над решением.
-
 # Задание 1. Анализ и планирование
 
 <aside>
@@ -137,47 +133,42 @@
 
 **Диаграмма контейнеров (Containers)**
 
-```markdown
 [C4_Container.puml](/docs/PlantUml/C4_Container.puml)
-```
+
 
 **Диаграмма компонентов (Components)**
 
-```markdown
 [C4_Component_Auth_Service.puml](/docs/PlantUml/C4_Component_Auth_Service.puml)
-```
-```markdown
+
+
 [C4_Component_Billing.puml](/docs/PlantUml/C4_Component_Billing.puml)
-```
 
-```markdown
+
+
 [C4_Component_Integration_Gateway.puml](/docs/PlantUml/C4_Component_Integration_Gateway.puml)
-```
 
-```markdown
+
+
 [C4_Component_Master_data.puml](/docs/PlantUml/C4_Component_Master_data.puml)
-```
-```markdown
+
+
 [C4_Component_Module_Management.puml](/docs/PlantUml/C4_Component_Module_Management.puml)
-```
-```markdown
+
 [C4_Component_User_Management.puml](/docs/PlantUml/C4_Component_User_Management.puml)
-```
-```markdown
+
 [C4_Component_Web_App.puml](/docs/PlantUml/C4_Component_Web_App.puml)
-```
+
 
 **Диаграмма кода (Code)**
 
-```markdown
 [C4_Code_token_service.puml](/docs/PlantUml/C4_Code_token_service.puml)
-```
+
 
 # Задание 3. Разработка ER-диаграммы
 
-```markdown
-[ER_диаграмма.puml](/docs/PlantUml/ER диаграмма.puml)
-```
+
+[ER_диаграмма.puml](/docs/PlantUml/ER_диаграмма.puml)
+
 
 # Задание 4. Создание и документирование API
 
@@ -212,12 +203,6 @@
 Здесь приложите ссылки на документацию API для микросервисов, которые вы спроектировали в первой части проектной работы. Для документирования используйте Swagger/OpenAPI или AsyncAPI.
 
 # Задание 5. Работа с docker и docker-compose
-
-Перейдите в apps.
-
-Там находится приложение-монолит для работы с датчиками температуры. В README.md описано как запустить решение.
-
-Вам нужно:
 
 1) Реализован отдельный микросервис temperature-api, который возвращает случайное значение температуры для указанной локации.
 
