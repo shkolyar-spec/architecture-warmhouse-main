@@ -129,7 +129,7 @@
 
 
 ```markdown
-[Context.puml](./docs/PlantUml/Context.puml)
+[Context.puml](/docs/PlantUml/Context.puml)
 ```
 
 # Задание 2. Проектирование микросервисной архитектуры
@@ -138,45 +138,45 @@
 **Диаграмма контейнеров (Containers)**
 
 ```markdown
-[C4_Container.puml](./docs/PlantUml/C4_Container.puml)
+[C4_Container.puml](/docs/PlantUml/C4_Container.puml)
 ```
 
 **Диаграмма компонентов (Components)**
 
 ```markdown
-[C4_Component_Auth_Service.puml](./docs/PlantUml/C4_Component_Auth_Service.puml)
+[C4_Component_Auth_Service.puml](/docs/PlantUml/C4_Component_Auth_Service.puml)
 ```
 ```markdown
-[C4_Component_Billing.puml](./docs/PlantUml/C4_Component_Billing.puml)
-```
-
-```markdown
-[C4_Component_Integration_Gateway.puml](./docs/PlantUml/C4_Component_Integration_Gateway.puml)
+[C4_Component_Billing.puml](/docs/PlantUml/C4_Component_Billing.puml)
 ```
 
 ```markdown
-[C4_Component_Master_data.puml](./docs/PlantUml/C4_Component_Master_data.puml)
+[C4_Component_Integration_Gateway.puml](/docs/PlantUml/C4_Component_Integration_Gateway.puml)
+```
+
+```markdown
+[C4_Component_Master_data.puml](/docs/PlantUml/C4_Component_Master_data.puml)
 ```
 ```markdown
-[C4_Component_Module_Management.puml](./docs/PlantUml/C4_Component_Module_Management.puml)
+[C4_Component_Module_Management.puml](/docs/PlantUml/C4_Component_Module_Management.puml)
 ```
 ```markdown
-[C4_Component_User_Management.puml](./docs/PlantUml/C4_Component_User_Management.puml)
+[C4_Component_User_Management.puml](/docs/PlantUml/C4_Component_User_Management.puml)
 ```
 ```markdown
-[C4_Component_Web_App.puml](./docs/PlantUml/C4_Component_Web_App.puml)
+[C4_Component_Web_App.puml](/docs/PlantUml/C4_Component_Web_App.puml)
 ```
 
 **Диаграмма кода (Code)**
 
 ```markdown
-[C4_Code_token_service.puml](./docs/PlantUml/C4_Code_token_service.puml)
+[C4_Code_token_service.puml](/docs/PlantUml/C4_Code_token_service.puml)
 ```
 
 # Задание 3. Разработка ER-диаграммы
 
 ```markdown
-[ER диаграмма.puml](./docs/PlantUml/ER диаграмма.puml)
+[ER_диаграмма.puml](/docs/PlantUml/ER диаграмма.puml)
 ```
 
 # Задание 4. Создание и документирование API
