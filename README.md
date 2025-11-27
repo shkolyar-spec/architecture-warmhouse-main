@@ -127,18 +127,9 @@
 
 ### 5. Визуализация контекста системы — диаграмма С4
 
-Добавьте сюда диаграмму контекста в модели C4.
-
-Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
-
-
-![Диаграмма контекста](ссылка)
-
-
-Замените `Текст ссылки` текстом, который хотите использовать для ссылки. Вместо `URL` вставьте адрес, на который должна вести ссылка. Например:
 
 ```markdown
-[Посетите Яндекс](https://ya.ru/)
+[Context.puml](./docs/PlantUml/Context.puml)
 ```
 
 # Задание 2. Проектирование микросервисной архитектуры
@@ -146,19 +137,47 @@
 
 **Диаграмма контейнеров (Containers)**
 
-Добавьте диаграмму.
+```markdown
+[C4_Container.puml](./docs/PlantUml/C4_Container.puml)
+```
 
 **Диаграмма компонентов (Components)**
 
-Добавьте диаграмму для каждого из выделенных микросервисов.
+```markdown
+[C4_Component_Auth_Service.puml](./docs/PlantUml/C4_Component_Auth_Service.puml)
+```
+```markdown
+[C4_Component_Billing.puml](./docs/PlantUml/C4_Component_Billing.puml)
+```
+
+```markdown
+[C4_Component_Integration_Gateway.puml](./docs/PlantUml/C4_Component_Integration_Gateway.puml)
+```
+
+```markdown
+[C4_Component_Master_data.puml](./docs/PlantUml/C4_Component_Master_data.puml)
+```
+```markdown
+[C4_Component_Module_Management.puml](./docs/PlantUml/C4_Component_Module_Management.puml)
+```
+```markdown
+[C4_Component_User_Management.puml](./docs/PlantUml/C4_Component_User_Management.puml)
+```
+```markdown
+[C4_Component_Web_App.puml](./docs/PlantUml/C4_Component_Web_App.puml)
+```
 
 **Диаграмма кода (Code)**
 
-Добавьте одну диаграмму или несколько.
+```markdown
+[C4_Code_token_service.puml](./docs/PlantUml/C4_Code_token_service.puml)
+```
 
 # Задание 3. Разработка ER-диаграммы
 
-Добавьте сюда ER-диаграмму. Она должна отражать ключевые сущности системы, их атрибуты и тип связей между ними.
+```markdown
+[ER диаграмма.puml](./docs/PlantUml/ER диаграмма.puml)
+```
 
 # Задание 4. Создание и документирование API
 
