@@ -20,5 +20,4 @@ Rel(token_service, ms_Redis, "Сохраняет refresh token / статус о
 BiRel(user_store_client, ms_databse, "Обращается", "JDBC")
 Rel(ms_api_gateway, auth_api, "Обращается", "REST")
 
-
 @enduml

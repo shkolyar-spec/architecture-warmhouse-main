@@ -1,6 +1,5 @@
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
-
 LAYOUT_TOP_DOWN()
 
 Container_Boundary(billing_container, "Billing / Sales", "Java", "Заказы комплектов устройств, оплата"){
