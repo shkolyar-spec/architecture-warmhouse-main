@@ -35,7 +35,6 @@ paths:
                     expiresIn: 3600
         '401': { $ref: '#/components/responses/Unauthorized' }
 
-
   /refresh:
     post:
       summary: Обновление access-токена по refresh-токену

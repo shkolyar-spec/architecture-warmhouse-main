@@ -148,4 +148,3 @@ components:
       properties:
         code: { type: string }
         message: { type: string }
-

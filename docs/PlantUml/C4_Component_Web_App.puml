@@ -32,5 +32,4 @@ Rel(api_client, api_gateway, "Отправляет REST-запросы", "HTTPS"
 
 Rel(auth_module, ms_auth_service, "Обновляет токены при входе", "REST")
 Rel(state_store, api_client, "Сохраняет полученные данные", "Internal API")
-
 @enduml

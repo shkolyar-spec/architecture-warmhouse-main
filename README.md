@@ -209,5 +209,3 @@
 2) Проект упакован в Docker.
 
 3) Добавлен docker-compose c smart_home + Postgres + temperature-api
-
-
